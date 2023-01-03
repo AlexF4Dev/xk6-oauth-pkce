@@ -16,6 +16,7 @@ type CodeChallengeMethod string
 const (
 	CodeChallengePlain CodeChallengeMethod = "PLAIN"
 	CodeChallengeS256                      = "S256"
+	CodeChallengeS512                      = "S512"
 )
 
 const CodeVerifierLength = 64 //43~128 https://datatracker.ietf.org/doc/html/rfc7636#section-4.1
@@ -75,6 +76,15 @@ func (m *OAuthPkceModule) Create(method CodeChallengeMethod) *CodeVerifier {
 
 	if method == CodeChallengeS256 {
 		digest := crypto.SHA256.New()
+		digest.Write([]byte(v.Verifier))
+		s := digest.Sum(nil)
+		sEnc := base64.StdEncoding.EncodeToString(s)
+		parts := strings.Split(sEnc, "=")
+		sEnc = parts[0]
+		r := strings.NewReplacer("+", "-", "/", "_")
+		v.Challenge = r.Replace(sEnc)
+	} else if method == CodeChallengeS512 {
+		digest := crypto.SHA512.New()
 		digest.Write([]byte(v.Verifier))
 		s := digest.Sum(nil)
 		sEnc := base64.StdEncoding.EncodeToString(s)
