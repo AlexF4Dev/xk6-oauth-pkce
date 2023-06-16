@@ -11,7 +11,7 @@ To build a `k6` binary with this extension, install [xk6](https://github.com/gra
 
 2. Build the binary:
   ```shell
-  $ xk6 build --with github.com/johndwalker/xk6-oauth-pkce@latest
+  $ xk6 build --with github.com/AlexF4Dev/xk6-oauth-pkce@latest
   ```
 
 # example
